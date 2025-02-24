@@ -1,39 +1,25 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchProducts } from "../services/api";
+import React, { useState, useMemo, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../features/cartSlice";
 import styled from "styled-components";
 
-const Container = styled.div`
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-`;
-
-const Title = styled.h1`
-  text-align: center;
-  font-size: 2.5rem;
-  margin-bottom: 1.5rem;
-`;
-
-const ProductGrid = styled.div`
+const ProductListContainer = styled.div`
   display: grid;
-  gap: 2rem;
+  gap: 1.5rem;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 `;
 
 const ProductCard = styled.div`
+  display: flex;
+  flex-direction: column;
   background-color: white;
   border-radius: 8px;
   padding: 1.5rem;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  
-  &:hover {
-    transform: translateY(-5px);
-  }
+  cursor: pointer;
+  height: 100%;
+  position: relative;
 `;
 
 const ProductImage = styled.img`
@@ -46,6 +32,7 @@ const ProductImage = styled.img`
 const ProductTitle = styled.h3`
   font-size: 1.2rem;
   color: #555;
+  flex-grow: 1; 
 `;
 
 const ProductPrice = styled.p`
@@ -54,45 +41,92 @@ const ProductPrice = styled.p`
 `;
 
 const AddToCartButton = styled.button`
-  background-color: #007bff;
+  background-color: #28a745;
   color: white;
   padding: 0.8rem 1.5rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  margin-top: auto; 
   
   &:hover {
-    background-color: #0056b3;
+    background-color: #218838;
   }
 `;
 
-const ProductList = () => {
-  const dispatch = useDispatch();
-  const { data: products, isLoading, isError } = useQuery({
-    queryKey: ["products"],
-    queryFn: fetchProducts,
-  });
+const SearchInput = styled.input`
+  width: 100%;
+  max-width: 400px;
+  padding: 0.8rem;
+  margin-bottom: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+`;
 
-  if (isLoading) return <p className="text-center text-gray-500">Loading products...</p>;
-  if (isError) return <p className="text-center text-red-500">Something went wrong!</p>;
+const ProductList = ({ products }) => {
+  const dispatch = useDispatch();
+
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product));
+  };
 
   return (
-    <Container>
-      <Title>Mall Street</Title>
-      <ProductGrid>
-        {products?.map((product) => (
+    <ProductListContainer>
+      {products.length === 0 ? (
+        <p>No products found.</p>
+      ) : (
+        products.map((product) => (
           <ProductCard key={product.id}>
             <ProductImage src={product.image} alt={product.title} />
             <ProductTitle>{product.title}</ProductTitle>
             <ProductPrice>R{product.price}</ProductPrice>
-            <AddToCartButton onClick={() => dispatch(addToCart(product))}>
+            <AddToCartButton onClick={() => handleAddToCart(product)}>
               Add to Cart
             </AddToCartButton>
           </ProductCard>
-        ))}
-      </ProductGrid>
-    </Container>
+        ))
+      )}
+    </ProductListContainer>
   );
 };
 
-export default ProductList;
+const App = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("https://fakestoreapi.com/products");
+        const data = await response.json();
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const filteredProducts = useMemo(() => {
+    if (!products || products.length === 0) return [];
+    return products.filter((product) =>
+      product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, products]);
+
+  return (
+    <div>
+      <SearchInput
+        type="text"
+        placeholder="Search for products..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <ProductList products={filteredProducts} />
+    </div>
+  );
+};
+
+export default App;
