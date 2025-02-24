@@ -13,20 +13,32 @@ const CartTitle = styled.h2`
   text-align: center;
   font-size: 2rem;
   margin-bottom: 1rem;
+  color: #333;
 `;
 
 const CartGrid = styled.div`
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  margin-bottom: 2rem;
 `;
 
 const CartCard = styled.div`
-  background-color: white;
-  border-radius: 8px;
+  background-color: #ffffff;
+  border-radius: 10px;
   padding: 1.5rem;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; 
+  height: 100%; 
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
 `;
 
 const CartImage = styled.img`
@@ -39,6 +51,7 @@ const CartImage = styled.img`
 const CartTitleText = styled.h3`
   font-size: 1.2rem;
   color: #555;
+  margin: 0.5rem 0;
 `;
 
 const CartPrice = styled.p`
@@ -51,18 +64,20 @@ const QuantityControls = styled.div`
   justify-content: center;
   align-items: center;
   gap: 1rem;
+  margin: 1rem 0;
 `;
 
 const QuantityButton = styled.button`
-  background-color: #007bff;
+  background-color: #455a64;
   color: white;
   padding: 0.5rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #607d8b;
   }
 `;
 
@@ -73,7 +88,9 @@ const RemoveButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+
   &:hover {
     background-color: #c82333;
   }
@@ -83,6 +100,7 @@ const Total = styled.h3`
   text-align: center;
   font-size: 1.5rem;
   margin-top: 2rem;
+  color: #333;
 `;
 
 const Cart = () => {
