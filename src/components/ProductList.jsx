@@ -1,33 +1,8 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../features/cartSlice";
+import { addToCart } from "../features/cartSlice"; 
 import styled from "styled-components";
-
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-`;
-
-const SearchInput = styled.input`
-  width: 100%;
-  max-width: 400px;
-  padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-in-out;
-  background-color: #eceff1;
-  
-  &:focus {
-    outline: none;
-    border-color: #28a745;
-    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
-  }
-`;
 
 const ProductListContainer = styled.div`
   display: grid;
@@ -102,9 +77,38 @@ const AddToCartButton = styled.button`
   }
 `;
 
-const ProductList = ({ products }) => {
+const ProductList = () => {
   const dispatch = useDispatch();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [bouncingProductId, setBouncingProductId] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("https://fakestoreapi.com/products");
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data = await response.json();
+        console.log("Fetched products:", data);
+        setProducts(data);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleProductClick = (id) => {
+    navigate(`/product/${id}`);
+  };
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
@@ -112,65 +116,29 @@ const ProductList = ({ products }) => {
     setTimeout(() => setBouncingProductId(null), 600); 
   };
 
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
     <ProductListContainer>
-      {products.length === 0 ? (
-        <p>No products found.</p>
-      ) : (
-        products.map((product) => (
-          <ProductCard key={product.id}>
-            <ProductImage src={product.image} alt={product.title} />
-            <ProductTitle>{product.title}</ProductTitle>
-            <ProductPrice>R{product.price}</ProductPrice>
-            <AddToCartButton
-              className={bouncingProductId === product.id ? "bounce" : ""}
-              onClick={() => handleAddToCart(product)}
-            >
-              {bouncingProductId === product.id ? "Added!" : "Add to Cart"}
-            </AddToCartButton>
-          </ProductCard>
-        ))
-      )}
+      {products.map((product) => (
+        <ProductCard key={product.id} onClick={() => handleProductClick(product.id)}>
+          <ProductImage src={product.image} alt={product.title} />
+          <ProductTitle>{product.title}</ProductTitle>
+          <ProductPrice>R{product.price}</ProductPrice>
+          <AddToCartButton
+            className={bouncingProductId === product.id ? "bounce" : ""}
+            onClick={(e) => {
+              e.stopPropagation(); 
+              handleAddToCart(product);
+            }}
+          >
+            {bouncingProductId === product.id ? "Added!" : "Add to Cart"}
+          </AddToCartButton>
+        </ProductCard>
+      ))}
     </ProductListContainer>
   );
 };
 
-const App = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("https://fakestoreapi.com/products");
-        const data = await response.json();
-        setProducts(data);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
-  const filteredProducts = useMemo(() => {
-    if (!products || products.length === 0) return [];
-    return products.filter((product) =>
-      product.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm, products]);
-
-  return (
-    <Container>
-      <SearchInput
-        type="text"
-        placeholder="Search for products..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <ProductList products={filteredProducts} />
-    </Container>
-  );
-};
-
-export default App;
+export default ProductList;

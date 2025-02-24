@@ -1,10 +1,11 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import styled from "styled-components";
 import GlobalStyle from "./styles/GlobalStyle";
 
 const ProductList = lazy(() => import("./components/ProductList"));
 const Cart = lazy(() => import("./components/Cart"));
+const ProductDetail = lazy(() => import("./components/ProductDetail"));
 
 const Container = styled.div`
   display: flex;
@@ -77,6 +78,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<ProductList />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/product/:id" element={<ProductDetail />} /> 
               </Routes>
             </Suspense>
           </MainContent>
