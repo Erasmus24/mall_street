@@ -5,8 +5,6 @@ const ProductList = lazy(() => import("./components/ProductList"));
 const Cart = lazy(() => import("./components/Cart"));
 
 function App() {
-  console.log("App component is rendering"); // Debugging
-
   return (
     <Router>
       <nav>
