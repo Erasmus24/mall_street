@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../features/cartSlice"; 
 import styled from "styled-components";
 
-// Styled components
 const Container = styled.div`
   padding: 2rem;
 `;
