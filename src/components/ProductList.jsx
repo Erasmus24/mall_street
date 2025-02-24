@@ -114,7 +114,7 @@ const ProductList = ({ products }) => {
   return (
     <ProductListContainer>
       {products.length === 0 ? (
-        <p>No products found.</p>
+        <p>Loading Products...</p>
       ) : (
         products.map((product) => (
           <ProductCard key={product.id}>
