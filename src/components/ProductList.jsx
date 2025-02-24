@@ -20,6 +20,7 @@ const SearchInput = styled.input`
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease-in-out;
+  background-color: #eceff1;
   
   &:focus {
     outline: none;
