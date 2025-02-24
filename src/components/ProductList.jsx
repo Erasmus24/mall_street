@@ -1,8 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../features/cartSlice"; 
 import styled from "styled-components";
+
+// Styled components
+const Container = styled.div`
+  padding: 2rem;
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  max-width: 400px;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  background-color: #eceff1;
+  
+  &:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+  }
+`;
 
 const ProductListContainer = styled.div`
   display: grid;
@@ -83,6 +107,7 @@ const ProductList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bouncingProductId, setBouncingProductId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -93,10 +118,8 @@ const ProductList = () => {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
-        console.log("Fetched products:", data);
         setProducts(data);
       } catch (err) {
-        console.error("Error fetching products:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -105,6 +128,12 @@ const ProductList = () => {
 
     fetchProducts();
   }, []);
+
+  const filteredProducts = useMemo(() => {
+    return products.filter(product =>
+      product.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [products, searchTerm]);
 
   const handleProductClick = (id) => {
     navigate(`/product/${id}`);
@@ -120,24 +149,32 @@ const ProductList = () => {
   if (error) return <p>Error: {error}</p>;
 
   return (
-    <ProductListContainer>
-      {products.map((product) => (
-        <ProductCard key={product.id} onClick={() => handleProductClick(product.id)}>
-          <ProductImage src={product.image} alt={product.title} />
-          <ProductTitle>{product.title}</ProductTitle>
-          <ProductPrice>R{product.price}</ProductPrice>
-          <AddToCartButton
-            className={bouncingProductId === product.id ? "bounce" : ""}
-            onClick={(e) => {
-              e.stopPropagation(); 
-              handleAddToCart(product);
-            }}
-          >
-            {bouncingProductId === product.id ? "Added!" : "Add to Cart"}
-          </AddToCartButton>
-        </ProductCard>
-      ))}
-    </ProductListContainer>
+    <Container>
+      <SearchInput
+        type="text"
+        placeholder="Search for products..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      <ProductListContainer>
+        {filteredProducts.map((product) => (
+          <ProductCard key={product.id} onClick={() => handleProductClick(product.id)}>
+            <ProductImage src={product.image} alt={product.title} />
+            <ProductTitle>{product.title}</ProductTitle>
+            <ProductPrice>R{product.price}</ProductPrice>
+            <AddToCartButton
+              className={bouncingProductId === product.id ? "bounce" : ""}
+              onClick={(e) => {
+                e.stopPropagation(); 
+                handleAddToCart(product);
+              }}
+            >
+              {bouncingProductId === product.id ? "Added!" : "Add to Cart"}
+            </AddToCartButton>
+          </ProductCard>
+        ))}
+      </ProductListContainer>
+    </Container>
   );
 };
 
