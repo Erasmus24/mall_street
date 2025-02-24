@@ -1,22 +1,27 @@
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import GlobalStyle from "./styles/GlobalStyle";
 
 const ProductList = lazy(() => import("./components/ProductList"));
 const Cart = lazy(() => import("./components/Cart"));
 
 function App() {
   return (
-    <Router>
-      <nav>
-        <Link to="/">Home</Link> | <Link to="/cart">Cart</Link>
-      </nav>
-      <Suspense fallback={<p>Loading...</p>}>
-        <Routes>
-          <Route path="/" element={<ProductList />} />
-          <Route path="/cart" element={<Cart />} />
-        </Routes>
-      </Suspense>
-    </Router>
+    <>
+      <GlobalStyle />
+      <Router>
+        <nav style={{ backgroundColor: "#007bff", padding: "1rem", textAlign: "center" }}>
+          <Link to="/" style={{ color: "#fff", margin: "0 1rem", textDecoration: "none" }}>Home</Link>
+          <Link to="/cart" style={{ color: "#fff", margin: "0 1rem", textDecoration: "none" }}>Cart</Link>
+        </nav>
+        <Suspense fallback={<p className="text-center text-gray-500">Loading...</p>}>
+          <Routes>
+            <Route path="/" element={<ProductList />} />
+            <Route path="/cart" element={<Cart />} />
+          </Routes>
+        </Suspense>
+      </Router>
+    </>
   );
 }
 
