@@ -10,7 +10,7 @@ function App() {
     <>
       <GlobalStyle />
       <Router>
-        <nav style={{ backgroundColor: "#007bff", padding: "1rem", textAlign: "center" }}>
+        <nav style={{ backgroundColor: "#607d8b", padding: "1rem", textAlign: "center" }}>
           <Link to="/" style={{ color: "#fff", margin: "0 1rem", textDecoration: "none" }}>Home</Link>
           <Link to="/cart" style={{ color: "#fff", margin: "0 1rem", textDecoration: "none" }}>Cart</Link>
         </nav>
