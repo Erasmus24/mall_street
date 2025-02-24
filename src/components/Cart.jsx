@@ -33,7 +33,7 @@ const CartCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between; 
-  height: 100%; 
+  height: 100%;
   
   &:hover {
     transform: translateY(-5px);
@@ -54,9 +54,18 @@ const CartTitleText = styled.h3`
   margin: 0.5rem 0;
 `;
 
+// Wrapper for bottom elements (price, quantity controls, and remove button)
+const CartBottom = styled.div`
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const CartPrice = styled.p`
   color: #777;
   margin: 0.5rem 0;
+  font-weight: bold;
 `;
 
 const QuantityControls = styled.div`
@@ -118,15 +127,17 @@ const Cart = () => {
             <CartCard key={item.id}>
               <CartImage src={item.image} alt={item.title} />
               <CartTitleText>{item.title}</CartTitleText>
-              <CartPrice>R{(item.price * item.quantity).toFixed(2)}</CartPrice>
-              <QuantityControls>
-                <QuantityButton onClick={() => dispatch(decreaseQuantity(item.id))}>-</QuantityButton>
-                <span>{item.quantity}</span>
-                <QuantityButton onClick={() => dispatch(increaseQuantity(item.id))}>+</QuantityButton>
-              </QuantityControls>
-              <RemoveButton onClick={() => dispatch(removeFromCart(item.id))}>
-                Remove
-              </RemoveButton>
+              <CartBottom>
+                <CartPrice>R{(item.price * item.quantity).toFixed(2)}</CartPrice>
+                <QuantityControls>
+                  <QuantityButton onClick={() => dispatch(decreaseQuantity(item.id))}>-</QuantityButton>
+                  <span>{item.quantity}</span>
+                  <QuantityButton onClick={() => dispatch(increaseQuantity(item.id))}>+</QuantityButton>
+                </QuantityControls>
+                <RemoveButton onClick={() => dispatch(removeFromCart(item.id))}>
+                  Remove
+                </RemoveButton>
+              </CartBottom>
             </CartCard>
           ))}
         </CartGrid>
