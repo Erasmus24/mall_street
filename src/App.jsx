@@ -6,6 +6,17 @@ import GlobalStyle from "./styles/GlobalStyle";
 const ProductList = lazy(() => import("./components/ProductList"));
 const Cart = lazy(() => import("./components/Cart"));
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`;
+
+const MainContent = styled.main`
+  flex: 1;
+  padding: 2rem;
+`;
+
 const Navbar = styled.nav`
   display: flex;
   align-items: center;
@@ -37,24 +48,38 @@ const StyledLink = styled(Link)`
   }
 `;
 
+const Footer = styled.footer`
+  background-color: #455a64;
+  color: white;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  margin-top: auto;
+`;
+
 function App() {
   return (
     <>
       <GlobalStyle />
       <Router>
-        <Navbar>
-          <Title>MALL STREET</Title>
-          <NavLinks>
-            <StyledLink to="/">Home</StyledLink>
-            <StyledLink to="/cart">Cart</StyledLink>
-          </NavLinks>
-        </Navbar>
-        <Suspense fallback={<p className="text-center text-gray-500">Loading...</p>}>
-          <Routes>
-            <Route path="/" element={<ProductList />} />
-            <Route path="/cart" element={<Cart />} />
-          </Routes>
-        </Suspense>
+        <Container>
+          <Navbar>
+            <Title>MALL STREET</Title>
+            <NavLinks>
+              <StyledLink to="/">Home</StyledLink>
+              <StyledLink to="/cart">Cart</StyledLink>
+            </NavLinks>
+          </Navbar>
+          <MainContent>
+            <Suspense fallback={<p className="text-center text-gray-500">Loading...</p>}>
+              <Routes>
+                <Route path="/" element={<ProductList />} />
+                <Route path="/cart" element={<Cart />} />
+              </Routes>
+            </Suspense>
+          </MainContent>
+          <Footer>© {new Date().getFullYear()} Mall Street. All rights reserved.</Footer>
+        </Container>
       </Router>
     </>
   );
