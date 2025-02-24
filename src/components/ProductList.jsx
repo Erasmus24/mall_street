@@ -3,10 +3,36 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../features/cartSlice";
 import styled from "styled-components";
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  max-width: 400px;
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+  
+  &:focus {
+    outline: none;
+    border-color: #28a745;
+    box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+  }
+`;
+
 const ProductListContainer = styled.div`
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  margin-top: 2rem;
 `;
 
 const ProductCard = styled.div`
@@ -75,16 +101,6 @@ const AddToCartButton = styled.button`
   }
 `;
 
-const SearchInput = styled.input`
-  width: 100%;
-  max-width: 400px;
-  padding: 0.8rem;
-  margin-bottom: 2rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
-`;
-
 const ProductList = ({ products }) => {
   const dispatch = useDispatch();
   const [bouncingProductId, setBouncingProductId] = useState(null);
@@ -144,7 +160,7 @@ const App = () => {
   }, [searchTerm, products]);
 
   return (
-    <div>
+    <Container>
       <SearchInput
         type="text"
         placeholder="Search for products..."
@@ -152,7 +168,7 @@ const App = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <ProductList products={filteredProducts} />
-    </div>
+    </Container>
   );
 };
 
