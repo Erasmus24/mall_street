@@ -20,6 +20,8 @@ After cloning the repository, you need to install the project dependencies. Run 
 
 npm install
 This will install all the necessary dependencies specified in the package.json file.
+Sometimes run:
+npm i --legacy-peer-deps
 
 Running the Development Server
 To run the app locally in development mode:
