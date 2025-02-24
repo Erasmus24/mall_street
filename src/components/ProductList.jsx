@@ -32,7 +32,7 @@ const ProductImage = styled.img`
 const ProductTitle = styled.h3`
   font-size: 1.2rem;
   color: #555;
-  flex-grow: 1; 
+  flex-grow: 1;
 `;
 
 const ProductPrice = styled.p`
@@ -47,10 +47,31 @@ const AddToCartButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: auto; 
+  margin-top: auto;
   
   &:hover {
     background-color: #218838;
+  }
+  &.bounce {
+    animation: bounce 0.6s ease-out;
+  }
+
+  @keyframes bounce {
+    0% {
+      transform: scale(1);
+    }
+    30% {
+      transform: scale(1.1);
+    }
+    50% {
+      transform: scale(1);
+    }
+    70% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
   }
 `;
 
@@ -66,9 +87,12 @@ const SearchInput = styled.input`
 
 const ProductList = ({ products }) => {
   const dispatch = useDispatch();
+  const [bouncingProductId, setBouncingProductId] = useState(null);
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
+    setBouncingProductId(product.id);
+    setTimeout(() => setBouncingProductId(null), 600); 
   };
 
   return (
@@ -81,8 +105,11 @@ const ProductList = ({ products }) => {
             <ProductImage src={product.image} alt={product.title} />
             <ProductTitle>{product.title}</ProductTitle>
             <ProductPrice>R{product.price}</ProductPrice>
-            <AddToCartButton onClick={() => handleAddToCart(product)}>
-              Add to Cart
+            <AddToCartButton
+              className={bouncingProductId === product.id ? "bounce" : ""}
+              onClick={() => handleAddToCart(product)}
+            >
+              {bouncingProductId === product.id ? "Added!" : "Add to Cart"}
             </AddToCartButton>
           </ProductCard>
         ))
