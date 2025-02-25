@@ -17,6 +17,7 @@ const ProductImage = styled.img`
   height: auto;
   margin-bottom: 1rem;
   border-radius: 5px;
+  margin-top: 2rem;
 `;
 
 const ProductTitle = styled.h2`

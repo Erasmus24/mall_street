@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from "react-router-dom";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import styled from "styled-components";
 import GlobalStyle from "./styles/GlobalStyle";
 
@@ -25,6 +25,12 @@ const Navbar = styled.nav`
   justify-content: space-between;
   background-color: #607d8b;
   padding: 1rem 2rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  transition: top 0.3s;
+  z-index: 50;
+  margin-bottom: 10px;
 `;
 
 const Title = styled.h1`
@@ -61,12 +67,26 @@ const Footer = styled.footer`
 `;
 
 function App() {
+  const [prevScrollPos, setPrevScrollPos] = useState(window.pageYOffset);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollPos = window.pageYOffset;
+      setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
+      setPrevScrollPos(currentScrollPos);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [prevScrollPos]);
+
   return (
     <>
       <GlobalStyle />
       <Router>
         <Container>
-          <Navbar>
+          <Navbar style={{ top: visible ? "0" : "-50px" }}>
             <StyledLink to='/'><Title>MALL STREET</Title></StyledLink> 
             <NavLinks>
               <StyledLink to="/">Home</StyledLink>
