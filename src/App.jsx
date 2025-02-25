@@ -67,7 +67,7 @@ function App() {
       <Router>
         <Container>
           <Navbar>
-            <Title>MALL STREET</Title>
+            <StyledLink to='/'><Title>MALL STREET</Title></StyledLink> 
             <NavLinks>
               <StyledLink to="/">Home</StyledLink>
               <StyledLink to="/cart">Cart</StyledLink>
