@@ -14,7 +14,7 @@ describe("Cart Component", () => {
   let store;
 
   beforeEach(() => {
-    store = mockStore({ cart: { items: mockCartItems } }); // Ensure correct state structure
+    store = mockStore({ cart: { items: mockCartItems } }); 
     store.dispatch = jest.fn();
   });
 
@@ -26,7 +26,7 @@ describe("Cart Component", () => {
     );
 
     expect(screen.getByText("Product A")).toBeInTheDocument();
-    expect(screen.getByText("R200.00")).toBeInTheDocument(); // 100 * 2
+    expect(screen.getByText("R200.00")).toBeInTheDocument(); 
   });
 
   it("removes item from cart when Remove button is clicked", () => {
