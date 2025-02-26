@@ -91,7 +91,7 @@ const QuantityButton = styled.button`
 `;
 
 const RemoveButton = styled.button`
-  background-color: #dc3545;
+  background-color: #ec407a;
   color: white;
   padding: 0.8rem 1.5rem;
   border: none;
@@ -101,7 +101,7 @@ const RemoveButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: #c82333;
+    background-color: #c2185b;
   }
 `;
 
