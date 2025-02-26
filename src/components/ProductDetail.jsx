@@ -30,6 +30,7 @@ const ProductPrice = styled.p`
   font-size: 1.5rem;
   color: #01579b;
   margin-bottom: 1rem;
+  font-weight: bold;
 `;
 
 const ProductDescription = styled.p`
